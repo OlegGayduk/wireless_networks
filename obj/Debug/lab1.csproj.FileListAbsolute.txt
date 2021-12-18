@@ -1,0 +1,10 @@
+G:\wireless_networks_new\lab1\bin\Debug\lab1.exe.config
+G:\wireless_networks_new\lab1\bin\Debug\lab1.exe
+G:\wireless_networks_new\lab1\bin\Debug\lab1.pdb
+G:\wireless_networks_new\lab1\obj\Debug\lab1.csprojAssemblyReference.cache
+G:\wireless_networks_new\lab1\obj\Debug\lab1.Form1.resources
+G:\wireless_networks_new\lab1\obj\Debug\lab1.Properties.Resources.resources
+G:\wireless_networks_new\lab1\obj\Debug\lab1.csproj.GenerateResource.cache
+G:\wireless_networks_new\lab1\obj\Debug\lab1.csproj.CoreCompileInputs.cache
+G:\wireless_networks_new\lab1\obj\Debug\lab1.exe
+G:\wireless_networks_new\lab1\obj\Debug\lab1.pdb
