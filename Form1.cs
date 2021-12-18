@@ -36,7 +36,7 @@ namespace lab1
 
                     double pp = p * 0.01;
 
-                    textBox5.Text = (higher_border(pp, d, a_length) * 100).ToString();
+                    textBox5.Text = (higher_border(pp, d, a_length) * 100).ToString() + "%";
                 }
                 
             } catch(Exception ex)
@@ -114,9 +114,20 @@ namespace lab1
             return m;
         }
 
-        private int[] A_counter(int gx, int amount, int d)
+        private int weight(string[] A, int d)
         {
-            int[] res = new int[amount - d];
+            int icount = 0;
+            for (int i = 0, temp; i != A.Length; i++)
+            {
+                temp = poly_counter(Convert.ToInt32(A[i]));
+                if (temp >= d + 1) icount++;
+            }
+            return icount;
+        }
+
+        private string[] A_counter(int gx, int amount, int d)
+        {
+            string[] res = new string[amount - d];
             int mr, cx;
             int newm = d;
             int deg = Convert.ToInt32(Math.Pow(2, degree(Convert.ToString(gx, 2))));
@@ -125,9 +136,22 @@ namespace lab1
             {
                 mr = newm * deg;
                 cx = poly_div(mr, gx);
-                res[i] = mr + cx;
+                res[i] = Convert.ToString(mr, 2) + Convert.ToString(cx, 2);
             }
 
+            return res;
+        }
+
+        private double exact_val(double p, int d, string[] A, int n)
+        {
+            double res = 0;
+            int Ai;
+            while ((d) != n + 1)
+            {
+                Ai = weight(A, d);
+                res = res + (Ai * Math.Pow(p, d) * Math.Pow(1 - p, n - d));
+                d++;
+            }
             return res;
         }
 
@@ -145,32 +169,17 @@ namespace lab1
                     int l = Convert.ToInt32(textBox2.Text);
                     int p = Convert.ToInt32(textBox4.Text);
 
-                    //int d = poly_counter(g);
-
                     int d = degree_counter(g);
 
-                    Random rnd = new Random();
+                    double pp = p * 0.01;
 
-                    int m = rnd.Next(2, 255);
+                    int n = l + degree_counter(g);
 
-                    //int[] m = gen_m(degree_counter(g) + l);
+                    string[] a = A_counter(Convert.ToInt32(Convert.ToString(g), 2), Convert.ToInt32(Math.Pow(2, 3)), d);
 
-                    //string m = Convert.ToString(poly_div(rnd.Next(2, 255), g), 2);
+                    double res = exact_val(pp, d, a, n);
 
-                    /*for (int i = 0; i < Math.Pow(4,2); i++)
-                    {
-                        int mr = Convert.ToInt32(10 * Math.Pow(2, degree_counter(g)));
-
-                        string ax = Convert.ToString(mr, 2) + Convert.ToString(poly_div(mr, g), 2);
-
-                        textBox3.Text = Convert.ToInt32(10 * Math.Pow(2, degree_counter(g))).ToString();
-                    }*/
-
-                    int[] res = A_counter(Convert.ToInt32(Convert.ToString(g), 2), Convert.ToInt32(Math.Pow(2, 4)), d);
-
-                    //int i = 0;
-
-                    textBox3.Text = Convert.ToInt32(10 * Math.Pow(2, degree_counter(g))).ToString();
+                    textBox3.Text = (res * 100).ToString() + "%";
                 }
             }
             catch (Exception ex)
