@@ -19,32 +19,36 @@ namespace lab1
                     MessageBox.Show("Данные заполнены некорректно!");
                 } else
                 {
-                    int g = Convert.ToInt32(textBox1.Text);
+                    int g = Convert.ToInt32(textBox1.Text, 2);
                     int l = Convert.ToInt32(textBox2.Text);
                     int p = Convert.ToInt32(textBox4.Text);
 
-                    int d = poly_counter(g);
+                    int d = degree_counter(g);
 
-                    int a_length = degree_counter(g) + l;
+                    int m = Convert.ToInt32(l * Math.Pow(2, degree_counter(g)));
+
+                    int n = degree_counter(m) + 1;
 
                     double pp = p * 0.01;
 
-                    textBox5.Text = higher_border(pp, d, a_length).ToString() + "%";
+                    textBox5.Text = higher_border(pp, d, n).ToString() + "%";
                 }
             } catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        double higher_border(double p, int d, int a_length)
+        private double higher_border(double p, int d, int a)
         {
             int c = 0;
             double res = 0;
 
-            while ((d - 1) != 0)
+            d--;
+
+            while ((d + 1) != 0)
             {
-                c = fact(a_length) / (fact(d) * fact(a_length - d));
-                res = res + c * Math.Pow(p, d) * Math.Pow(1 - p, a_length - d);
+                c = fact(a) / (fact(d) * fact(a - d));
+                res = res + c * Math.Pow(p, d) * Math.Pow(1 - p, a - d);
                 d--;
             }
 
@@ -120,7 +124,7 @@ namespace lab1
 
             for (int i = 0; i < arr.Length; i++)
             {
-                if (poly_counter(arr[i]) >= (d + 1)) c++;
+                if (poly_counter(arr[i]) >= d) c++;
             }
 
             return c;
@@ -163,7 +167,7 @@ namespace lab1
 
                     int[] arr = arr_counter(g, l, d);
 
-                    int n = degree_counter(m);
+                    int n = degree_counter(m) + 1;
 
                     double res = exact_val(pp, d, arr, n);
 
