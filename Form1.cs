@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace lab1
@@ -36,9 +29,8 @@ namespace lab1
 
                     double pp = p * 0.01;
 
-                    textBox5.Text = (higher_border(pp, d, a_length) * 100).ToString() + "%";
+                    textBox5.Text = higher_border(pp, d, a_length).ToString() + "%";
                 }
-                
             } catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -48,23 +40,28 @@ namespace lab1
         {
             int c = 0;
             double res = 0;
+
             while ((d - 1) != 0)
             {
                 c = fact(a_length) / (fact(d) * fact(a_length - d));
                 res = res + c * Math.Pow(p, d) * Math.Pow(1 - p, a_length - d);
                 d--;
             }
+
             return (1 - res);
         }
         private int degree_counter(int number)
         {
             int i = 0;
+
             while (number != 0)
             {
-                number /= 10;
+                number /= 2;
                 i++;
             }
+
             i--;
+
             return i;
         }
 
@@ -74,84 +71,73 @@ namespace lab1
             {
                 return 1;
             }
+
             return A * fact(A - 1);
         }
 
-        int poly_counter(int number)
+        private int poly_counter(int number)
         {
             int i = 0;
+
             while (number != 0)
             {
-                if (number % 10 == 1) i++;
-                number /= 10;
+                if (number % 2 == 1) i++;
+                number /= 2;
             }
+
             return i;
         }
-
-        private int degree(string m)
-        {
-            int t = 0;
-
-            for (int i = 0; i < m.Length - 1; i++)
-            {
-                if (m[i] == '1')
-                {
-                    t = (m.Length - 1) - i;
-                    break;
-                }
-            }
-
-            return t;
-        }
-
         private int poly_div(int m, int gx)
         {
-            for (int gx_temp; (degree(Convert.ToString(m, 2)) >= degree_counter(gx));)
+            for (int gx_temp; (degree_counter(m) >= degree_counter(gx));)
             {
-                gx_temp = Convert.ToInt32(Convert.ToString(gx), 2) << (degree(Convert.ToString(m, 2)) - degree_counter(gx));
+                gx_temp = gx << (degree_counter(m) - degree_counter(gx));
                 m = m ^ gx_temp;
             }
+
             return m;
         }
-
-        private int weight(string[] A, int d)
+        private int[] arr_counter(int g, int amount, int d)
         {
-            int icount = 0;
-            for (int i = 0, temp; i != A.Length; i++)
-            {
-                temp = poly_counter(Convert.ToInt32(A[i]));
-                if (temp >= d + 1) icount++;
-            }
-            return icount;
-        }
-
-        private string[] A_counter(int gx, int amount, int d)
-        {
-            string[] res = new string[amount - d];
+            int[] res = new int[amount];
             int mr, cx;
-            int newm = d;
-            int deg = Convert.ToInt32(Math.Pow(2, degree(Convert.ToString(gx, 2))));
+            int newm = 1;
+            int deg = Convert.ToInt32(Math.Pow(2, degree_counter(g)));
 
-            for (int i = 0; i != (amount - d); i++, newm++)
+            for (int i = 0; i != amount; i++, newm++)
             {
                 mr = newm * deg;
-                cx = poly_div(mr, gx);
-                res[i] = Convert.ToString(mr, 2) + Convert.ToString(cx, 2);
+                cx = poly_div(mr, g);
+                res[i] = mr + cx;
             }
 
             return res;
         }
 
-        private double exact_val(double p, int d, string[] A, int n)
+        private int weight(int[] arr, int d)
         {
-            double res = 0;
-            int Ai;
-            while ((d) != n + 1)
+            int c = 0;
+
+            for (int i = 0; i < arr.Length; i++)
             {
-                Ai = weight(A, d);
+                if (poly_counter(arr[i]) >= (d + 1)) c++;
+            }
+
+            return c;
+        }
+
+        private double exact_val(double p, int d, int[] arr, int n)
+        {
+            int Ai = 0;
+            double res = 0;
+
+            while (d != (n + 1))
+            {
+                Ai = weight(arr, d);
                 res = res + (Ai * Math.Pow(p, d) * Math.Pow(1 - p, n - d));
                 d++;
             }
+
             return res;
         }
 
@@ -165,21 +151,23 @@ namespace lab1
                 }
                 else
                 {
-                    int g = Convert.ToInt32(textBox1.Text);
+                    int g = Convert.ToInt32(textBox1.Text, 2);
                     int l = Convert.ToInt32(textBox2.Text);
                     int p = Convert.ToInt32(textBox4.Text);
 
                     int d = degree_counter(g);
 
+                    int m = Convert.ToInt32(l * Math.Pow(2, degree_counter(g)));
+
                     double pp = p * 0.01;
 
-                    int n = l + degree_counter(g);
+                    int[] arr = arr_counter(g, l, d);
 
-                    string[] a = A_counter(Convert.ToInt32(Convert.ToString(g), 2), Convert.ToInt32(Math.Pow(2, 3)), d);
+                    int n = degree_counter(m);
 
-                    double res = exact_val(pp, d, a, n);
+                    double res = exact_val(pp, d, arr, n);
 
-                    textBox3.Text = (res * 100).ToString() + "%";
+                    textBox3.Text = res.ToString() + "%";
                 }
             }
             catch (Exception ex)
