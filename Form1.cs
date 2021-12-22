@@ -103,12 +103,13 @@ namespace lab1
         }
         private int[] arr_counter(int g, int amount, int d)
         {
-            int[] res = new int[amount];
+            int count = Convert.ToInt32(Math.Pow(2, degree_counter(amount) + 1) - 1);
+            int[] res = new int[count];
             int mr, cx;
             int newm = 1;
             int deg = Convert.ToInt32(Math.Pow(2, degree_counter(g)));
 
-            for (int i = 0; i != amount; i++, newm++)
+            for (int i = 0; i != count; i++, newm++)
             {
                 mr = newm * deg;
                 cx = poly_div(mr, g);
